@@ -19,7 +19,7 @@ impl Scanner {
         }
     }
 
-    pub fn scan_tokens(&self) {
+    pub fn scan_tokens(&mut self) {
         while(!self.is_at_end()) {
             // We are at the beginning of the next lexeme.
             self.start = self.current;
@@ -29,7 +29,7 @@ impl Scanner {
         self.tokens.push(Token::new(TokenType::Eof, String::from(""), String::from(""), 0));
     }
 
-    fn scan_token(&self){
+    fn scan_token(&mut self){
         let c: char = self.advance();
         match c {
             '(' => self.add_token(TokenType::LeftParen, String::from("(")),
@@ -42,15 +42,16 @@ impl Scanner {
             '+' => self.add_token(TokenType::Plus, String::from("+")),
             ';' => self.add_token(TokenType::Semicolon, String::from(";")),
             '*' => self.add_token(TokenType::Star, String::from("*")),
+            _ => ()
         }
     }
 
-    fn add_token(&self, token_type: TokenType, lexeme: String) {
+    fn add_token(&mut self, token_type: TokenType, lexeme: String) {
         let text: String = self.source.chars().skip(self.start as usize).take((self.current - self.start) as usize).collect();
         self.tokens.push(Token::new(token_type, lexeme, text, self.line));
     }
 
-    fn advance(&self) -> char {
+    fn advance(&mut self) -> char {
         self.current += 1;
         self.source.chars().nth(self.current as usize).unwrap()
     }
